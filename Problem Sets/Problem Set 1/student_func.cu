@@ -35,6 +35,8 @@
 #include "utils.h"
 #include <stdio.h>
 
+#define BLOCK_WIDTH 32
+
 __global__
 void rgba_to_greyscale(const uchar4* const rgbaImage,
                        unsigned char* const greyImage,
@@ -64,12 +66,11 @@ void rgba_to_greyscale(const uchar4* const rgbaImage,
 void your_rgba_to_greyscale(const uchar4 * const h_rgbaImage, uchar4 * const d_rgbaImage,
                             unsigned char* const d_greyImage, size_t numRows, size_t numCols)
 {
-  int blockWidth = 32;
   //You must fill in the correct sizes for the blockSize and gridSize
   //currently only one block with one thread is being launched
-  const dim3 blockSize(blockWidth, blockWidth, 1);  //TODO
-  int blocksX = numRows/blockWidth+1;
-  int blocksY = numCols/blockWidth+1;
+  const dim3 blockSize(BLOCK_WIDTH, BLOCK_WIDTH, 1);  //TODO
+  int blocksX = numRows / BLOCK_WIDTH + 1;
+  int blocksY = numCols / BLOCK_WIDTH + 1;
   const dim3 gridSize( blocksX, blocksY, 1);  //TODO
   rgba_to_greyscale<<<gridSize, blockSize>>>(d_rgbaImage, d_greyImage, numRows, numCols);
   
